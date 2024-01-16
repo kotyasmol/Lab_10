@@ -2,6 +2,7 @@
 {
     public class Person 
     {
+        private static readonly string[] Names = { "John", "Alice", "Bob", "Eva", "Charlie", "Olivia", "Daniel", "Sophia" }; // нет необходимости перезаписывать поэтому readonly
         private string name; // не string? потому что не должен допускать NULL
         private int age;
 
@@ -34,7 +35,7 @@
         {
             Console.WriteLine($"Name: {Name}, Age: {Age}");
         }
-        public virtual Person Init() // ввод объекта класса с консоли
+        public virtual Person Init() // ввод объекта класса с консоли //невозможно протестировать на 100% потому что стек переполняется
         {
             int userAge;
             string userName;
@@ -57,6 +58,28 @@
                 break;
             }
             return new Person { Name = userName, Age = userAge };
+        }
+        public virtual Person RandomInit()
+        {
+            Random random = new Random();
+            string randomName = Names[random.Next(Names.Length)]; // массив имен
+            int randomAge = random.Next(1, 99);
+            return new Person { Name = randomName, Age = randomAge };
+        }
+        public virtual bool Equals(Person otherPerson)
+        {
+            if (otherPerson == null)
+            {
+                return false;
+            }
+
+            // Сравниваем поля на равенство
+            return Name == otherPerson.Name && Age == otherPerson.Age;
+        }
+
+        public override int GetHashCode() // метод нужен для вывода хэш кода (если равны то их хэ
+        {
+            return HashCode.Combine(Name, Age);
         }
     }
 }
