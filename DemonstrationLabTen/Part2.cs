@@ -16,7 +16,7 @@ namespace DemonstrationLabTen
             Console.WriteLine("Введите количество объектов для создания:");
             Console.Write("=> ");
             while (true)
-            { 
+            {
                 if (!int.TryParse(Console.ReadLine(), out int n) || n <= 0)
                 {
                     Console.WriteLine("Некорректный ввод. Пожалуйста, введите положительное целое число.");
@@ -24,6 +24,9 @@ namespace DemonstrationLabTen
                     continue;
                 }
                 CreateAndDisplayObjects(n);
+                RequestNumberOne();
+                RequestNumberTwo();
+               
                 return;
             }
         }
@@ -75,7 +78,118 @@ namespace DemonstrationLabTen
             {
                 Console.Write($"Тип: {person.GetType().Name}, ");
                 person.Show();
-                Console.WriteLine(); // Добавляем пустую строку между объектами для читаемости
+                Console.WriteLine();
+            }
+        }
+        static List<string> GetNamesOfStudentsByCourse(int targetCourse)
+        {
+            List<string> result = new List<string>();
+
+            foreach (var person in persons)
+            {
+                if (person is Student || person is PartTimeStudent) // Проверяем, что объект является Student или PartTimeStudent
+                {
+                    int year = GetCourseFromPerson(person);
+                    if (year == targetCourse)
+                    {
+                        string name = GetNameFromPerson(person);
+                        result.Add(name);
+                    }
+                }
+            }
+            return result;
+        }
+        static int GetCourseFromPerson(Person person)
+        {
+            // Используем динамическую идентификацию типа
+            if (person is Student student)
+            {
+                return student.Year;
+            }
+            else if (person is PartTimeStudent partTimeStudent)
+            {
+                return partTimeStudent.Year;
+            }
+
+            return 0; // Если не является ни Student, ни PartTimeStudent
+        }
+
+        static string GetNameFromPerson(Person person)
+        {
+            return person.Name;
+        }
+        static void RequestNumberOne() // ЗАПРОС 1
+        {
+            Console.WriteLine("\nЗапрос #1 - Имена студентов заданного курса \n Введите порядковый номер курса (от 1 до 6):");
+            Console.Write("=> ");
+            if (!int.TryParse(Console.ReadLine(), out int targetCourse) || targetCourse < 1 || targetCourse > 6)
+            {
+                Console.WriteLine("Некорректный ввод. Введите число от 1 до 6.");
+                return;
+            }
+            List<string> namesOfStudents = GetNamesOfStudentsByCourse(targetCourse);
+            Console.WriteLine($"Имена студентов заданного курса ({targetCourse}):");
+            foreach (var name in namesOfStudents)
+            {
+                Console.Write($"Форма обучения: {name.GetType().Name}, "); // ПОДУМАТЬ
+                Console.WriteLine(name);
+            }
+        }
+        static void RequestNumberTwo() // ЗАПРОС 2
+        {
+            Console.WriteLine("Введите возраст для поиска студентов старше:");
+            if (!int.TryParse(Console.ReadLine(), out int targetAge) || targetAge < 1 || targetAge > 99)
+            {
+                Console.WriteLine("Некорректный ввод. Введите число от 1 до 99.");
+                return;
+            }
+
+            static List<string> GetNamesOfStudentsOlderThanAge(int targetAge)
+            {
+                List<string> result = new List<string>();
+
+                foreach (var person in persons)
+                {
+                    if (person is Student || person is PartTimeStudent) // Проверяем, что объект является Student или PartTimeStudent
+                    {
+                        int age = GetAgeFromPerson(person);
+                        if (age > targetAge)
+                        {
+                            string name = GetNameFromPerson(person);
+                            result.Add(name);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            static int GetAgeFromPerson(Person person)
+            {
+                // Используем динамическую идентификацию типа
+                if (person is Student student)
+                {
+                    return student.Age;
+                }
+                else if (person is PartTimeStudent partTimeStudent)
+                {
+                    return partTimeStudent.Age;
+                }
+
+                return -1; // Если не является ни Student, ни PartTimeStudent
+            }
+
+            static string GetNameFromPerson(Person person)
+            {
+                return person.Name;
+            }
+
+            List<string> namesOfStudents = GetNamesOfStudentsOlderThanAge(targetAge);
+
+            // Выводим результат
+            Console.WriteLine($"Имена студентов старше {targetAge} лет:");
+            foreach (var name in namesOfStudents)
+            {
+                Console.WriteLine(name);
             }
         }
     }

@@ -74,7 +74,7 @@ namespace PersonLibrary
             {
                 Name = basePerson.Name,
                 Age = random.Next(7, 18), // изменено потому что 80 летние обычно не ходят в школу, но если передумаешь то можно вернуть на место Age = basePeson.Age
-                Grade = random.Next(1, 11) // Пример логики для инициализации Grade для Scholar
+                Grade = random.Next(1, 12) // Пример логики для инициализации Grade для Scholar
             };
 
             return newScholar;

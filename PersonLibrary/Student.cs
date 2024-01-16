@@ -69,7 +69,7 @@ namespace PersonLibrary
             {
                 Name = basePerson.Name,
                 Age = random.Next(18, 98), 
-                Year = random.Next(1, 6) 
+                Year = random.Next(1, 7) 
             };
             return newStudent;
         }
