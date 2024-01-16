@@ -1,7 +1,7 @@
 ﻿using PersonLibrary;
 using System.Security.Cryptography.X509Certificates;
 namespace DemonstrationLabTen;
-class Program
+class Part1
 {
     static List<Person> persons = new List<Person>();
     public static void PrintMenu()
@@ -14,7 +14,7 @@ class Program
     }
     static void Main()
     {
-
+        Console.WriteLine("ЧАСТЬ 1 - создание иерархии классов");
         while (true)
         {
             Console.WriteLine("Меню:");
@@ -23,7 +23,7 @@ class Program
             Console.WriteLine("3. Работа с классом ЗАОЧНИК");
             Console.WriteLine("4. Работа с классом ШКОЛЬНИК");
             Console.WriteLine("5. Вывод созданных объектов");
-            Console.WriteLine("6. Выход");
+            Console.WriteLine("6. Перейти ко второй части л/р 10 - динамическая идентификация типов");
             Console.Write("=> ");
 
             int choice;
@@ -51,13 +51,13 @@ class Program
                     DisplayObjects();
                     break;
                 case 6:
-                    Environment.Exit(0);
-                    break;
+                    Part2.RunPart2();  // перейти ко второй части
+                    return;
             }
         }
     }
 
-    static void WorkWithPerson() // крутышка
+    static void WorkWithPerson() 
     {
         while (true)
         {
@@ -219,6 +219,5 @@ class Program
             person.ShowInfo();
             Console.WriteLine(); // Добавляем пустую строку между объектами для читаемости
         }
-
     }
 }
