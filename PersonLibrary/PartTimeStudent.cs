@@ -31,7 +31,11 @@ namespace PersonLibrary
         public override void Show()
         {
             base.Show();
-            Console.WriteLine($"Место работы: {work}");
+            Console.Write($", Место работы: {work}");
+        }
+        public void ShowInfo()
+        {
+            Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {Year}, Место работы: {work}");
         }
         public override Person Init() 
         {
@@ -74,7 +78,7 @@ namespace PersonLibrary
             return newPrtStudent;
         }
 
-        public override bool Equals(Person otherPerson) // ПОДУМАТЬ
+        public override bool Equals(Person otherPerson) // ПОДУМАТЬ, возможно тут что-то не так
         {
             if (otherPerson == null)
             {
@@ -84,9 +88,9 @@ namespace PersonLibrary
             {
                 return false;
             }
-            if (otherPerson is Student otherStudent)
+            if (otherPerson is PartTimeStudent otherPrtStudent)
             {
-                return year == otherStudent.year;
+                return work == otherPrtStudent.work;
             }
             return false;
         }

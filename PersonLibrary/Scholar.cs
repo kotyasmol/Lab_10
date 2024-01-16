@@ -34,7 +34,11 @@ namespace PersonLibrary
             base.Show(); // Вызываем базовый метод Show
 
             // Добавляем дополнительную информацию для Scholar
-            Console.WriteLine($"Год обучения (класс): {grade}");
+            Console.Write($", Год обучения (класс): {grade}");
+        }
+        public void ShowInfo()
+        {
+            Console.Write($"Имя: {Name}, Возраст: {Age}, Год обучения (класс): {grade}");
         }
         public override Person Init()
         {

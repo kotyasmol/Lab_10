@@ -33,7 +33,11 @@
         }
         public virtual void Show()
         {
-            Console.WriteLine($"Name: {Name}, Age: {Age}");
+            Console.Write($"Имя: {Name}, Возраст: {Age}");
+        }
+        public void ShowInfo()
+        {
+            Console.Write($"Имя: {Name}, Возраст: {Age}");
         }
         public virtual Person Init() // ввод объекта класса с консоли //невозможно протестировать на 100% потому что стек переполняется
         {

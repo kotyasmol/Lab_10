@@ -1,51 +1,224 @@
 ﻿using PersonLibrary;
+using System.Security.Cryptography.X509Certificates;
 namespace DemonstrationLabTen;
 class Program
 {
+    static List<Person> persons = new List<Person>();
+    public static void PrintMenu()
+    {
+        Console.WriteLine("1. Создание пустого объекта");
+        Console.WriteLine("2. Создание рандомного объекта");
+        Console.WriteLine("3. Создание пользовательского объекта");
+        Console.WriteLine("4. Назад");
+        Console.Write("=> ");
+    }
     static void Main()
     {
-        Console.WriteLine("СОЗДАНИЕ ВРУЧНУЮ");
-        Person userPerson = new Person();
-        userPerson = userPerson.Init();
-        userPerson.Show();
-        Console.WriteLine("СОЗДАНИЕ РАНДОМНО");
-        Person randomPerson = new Person();
-        randomPerson = randomPerson.RandomInit();
-        randomPerson.Show();
-        Console.WriteLine("ДЕМОНСТРАЦИЯ EQUALS");
-        Person person1 = new Person { Name = "John", Age = 30 };
-        person1.Show();
-        Person person2 = new Person { Name = "John", Age = 30 };
-        person2.Show();
-        Person person3 = new Person { Name = "Alice", Age = 25 };
-        person3.Show();
-        bool areEqual1 = person1.Equals(person2);
-        bool areEqual2 = person1.Equals(person3);
-        Console.WriteLine($"Are persons 1 and 2 equal? {areEqual1}"); // Выведет true
-        Console.WriteLine($"Are persons 1 and 3 equal? {areEqual2}"); // Выведет false
 
-        Console.WriteLine("РАНДОМНОЕ СОЗДАНИЕ ШКОЛЬНИКА");
-        Scholar randomScholar = new Scholar();
-        randomScholar = (Scholar)randomScholar.RandomInit();
-        randomScholar.Show();
-        Console.WriteLine("СОЗДАНИЕ ШКОЛЬНИКА ВРУЧНУЮ");
-        Scholar userScholar = new Scholar();
-        userScholar = (Scholar)userScholar.Init();
-        userScholar.Show();
-        Console.WriteLine("СРАВНЕНИЕ ШКОЛЬНИКОВ");
-        bool areEqualScholar = randomScholar.Equals(userScholar);
-        Console.WriteLine(areEqualScholar);
+        while (true)
+        {
+            Console.WriteLine("Меню:");
+            Console.WriteLine("1. Работа с классом ПЕРСОНА");
+            Console.WriteLine("2. Работа с классом СТУДЕНТ");
+            Console.WriteLine("3. Работа с классом ЗАОЧНИК");
+            Console.WriteLine("4. Работа с классом ШКОЛЬНИК");
+            Console.WriteLine("5. Вывод созданных объектов");
+            Console.WriteLine("6. Выход");
+            Console.Write("=> ");
 
-        Console.WriteLine("РАНДОМНОЕ СОЗДАНИЕ СТУДЕНТА");
-        Student randomStudent = new Student();
-        randomStudent = (Student)randomStudent.RandomInit();
-        randomStudent.Show();
-        Console.WriteLine("СОЗДАНИЕ СТУДЕНТА ВРУЧНУЮ");
-        Student userStudent = new Student();
-        userStudent = (Student)userStudent.Init();
-        userStudent.Show();
-        Console.WriteLine("СРАВНЕНИЕ СТУДЕНТОВ");
-        bool areEqualStudent = randomStudent.Equals(userStudent);
-        Console.WriteLine(areEqualStudent);
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 6)
+            {
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 6.");
+                continue;
+            }
+
+            switch (choice)
+            {
+                case 1:
+                    WorkWithPerson();
+                    break;
+                case 2:
+                    WorkWithStudent();
+                    break;
+                case 3:
+                    WorkWithPartTimeStudent();
+                    break;
+                case 4:
+                    WorkWithScholar();
+                    break;
+                case 5:
+                    DisplayObjects();
+                    break;
+                case 6:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+    }
+
+    static void WorkWithPerson() // крутышка
+    {
+        while (true)
+        {
+            Console.WriteLine("Работа с классом ПЕРСОНА:");
+            PrintMenu();
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+            {
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 4.");
+                continue;
+            }
+
+            switch (choice)
+            {
+                case 1:
+                    persons.Add(new Person());
+                    break;
+                case 2:
+                    Person randomPerson = new Person();
+                    randomPerson = randomPerson.RandomInit();
+                    persons.Add(randomPerson);
+                    break;
+                case 3:
+                    Person userPerson = new Person();
+                    userPerson = userPerson.Init();
+                    persons.Add(userPerson);
+                    break;
+                case 4:
+                    return;
+            }
+        }
+    }
+
+    static void WorkWithStudent()
+    {
+        while (true)
+        {
+            Console.WriteLine("Работа с классом СТУДЕНТ:");
+            PrintMenu();
+
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+            {
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 4.");
+                continue;
+            }
+
+            switch (choice)
+            {
+                case 1:
+                    persons.Add(new Student());
+                    break;
+                case 2:
+                    Student randomPerson = new Student();
+                    randomPerson = (Student)randomPerson.RandomInit();
+                    persons.Add(randomPerson);
+                    break;
+                case 3:
+                    Student userPerson = new Student();
+                    userPerson = (Student)userPerson.Init();
+                    persons.Add(userPerson);
+                    break;
+                case 4:
+                    return;
+            }
+        }
+    }
+
+    static void WorkWithPartTimeStudent()
+    {
+        while (true)
+        {
+            Console.WriteLine("Работа с классом PARTTIMESTUDENT:");
+            PrintMenu();
+
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+            {
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 4.");
+                continue;
+            }
+
+            switch (choice)
+            {
+                case 1:
+                    persons.Add(new PartTimeStudent());
+                    break;
+                case 2:
+                    PartTimeStudent randomPerson = new PartTimeStudent();
+                    randomPerson = (PartTimeStudent)randomPerson.RandomInit();
+                    persons.Add(randomPerson);
+                    break;
+                case 3:
+                    PartTimeStudent userPerson = new PartTimeStudent();
+                    userPerson = (PartTimeStudent)userPerson.Init();
+                    persons.Add(userPerson);
+                    break;
+                case 4:
+                    return;
+            }
+        }
+    }
+
+    static void WorkWithScholar()
+    {
+        while (true)
+        {
+            Console.WriteLine("Работа с классом ШКОЛЬНИК:");
+            PrintMenu();
+
+            int choice;
+            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+            {
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 4.");
+                continue;
+            }
+
+            switch (choice)
+            {
+                case 1:
+                    persons.Add(new Scholar());
+                    break;
+                case 2:
+                    Scholar randomPerson = new Scholar();
+                    randomPerson = (Scholar)randomPerson.RandomInit();
+                    persons.Add(randomPerson);
+                    break;
+                case 3:
+                    Scholar userPerson = new Scholar();
+                    randomPerson = (Scholar)userPerson.Init();
+                    persons.Add(randomPerson);
+                    break;
+                case 4:
+                    return;
+            }
+        }
+    }
+
+    static void DisplayObjects()
+    {
+        if (persons.Count == 0)
+        {
+            Console.WriteLine("Еще не создано ни одного объекта. Вернитесь и создайте объект.");
+            return;
+        }
+
+        Console.WriteLine("Созданные объекты (виртуальный метод):");
+
+        foreach (var person in persons)
+        {
+            Console.Write($"Тип: {person.GetType().Name}, ");
+            person.Show();
+            Console.WriteLine(); // Добавляем пустую строку между объектами для читаемости
+        }
+        Console.WriteLine("\nСозданные объекты (метод):");
+        foreach (var person in persons)
+        {
+            Console.Write($"Тип: {person.GetType().Name}, ");
+            person.ShowInfo();
+            Console.WriteLine(); // Добавляем пустую строку между объектами для читаемости
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,11 @@ namespace PersonLibrary
         public override void Show()
         {
             base.Show();
-            Console.WriteLine($"Курс: {year}");
+            Console.Write($", Курс: {year}");
+        }
+        public void ShowInfo()
+        {
+            Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {year}");
         }
         public override Person Init() // ВОЗМОЖНО есть смысл добавить специальность но это если тебе делать нехуй, в рандом тоже тогда ( с массивом специальностей)
         {
