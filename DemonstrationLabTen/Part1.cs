@@ -24,12 +24,13 @@ class Part1
             Console.WriteLine("4. Работа с классом ШКОЛЬНИК");
             Console.WriteLine("5. Вывод созданных объектов");
             Console.WriteLine("6. Перейти ко второй части л/р 10 - динамическая идентификация типов");
+            Console.WriteLine("7. Перейти к третьей части л/р 10 - интерфейсы");
             Console.Write("=> ");
 
             int choice;
-            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 6)
+            if (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 7)
             {
-                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 6.");
+                Console.WriteLine("Некорректный выбор. Пожалуйста, выберите от 1 до 7.");
                 continue;
             }
 
@@ -52,6 +53,9 @@ class Part1
                     break;
                 case 6:
                     Part2.RunPart2();  // перейти ко второй части
+                    return;
+                case 7:
+                    Part3.RunPart3();
                     return;
             }
         }

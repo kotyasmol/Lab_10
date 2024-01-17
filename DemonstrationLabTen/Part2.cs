@@ -26,7 +26,9 @@ namespace DemonstrationLabTen
                 CreateAndDisplayObjects(n);
                 RequestNumberOne();
                 RequestNumberTwo();
-               
+                RequestNumberThree();
+                Console.WriteLine("Все запросы выполнены, переход к третьей части задания...");
+                Part3.RunPart3();
                 return;
             }
         }
@@ -63,7 +65,6 @@ namespace DemonstrationLabTen
             // Выводим созданные объекты
             DisplayObjects();
         }
-
         static void DisplayObjects()
         {
             if (persons.Count == 0)
@@ -81,116 +82,143 @@ namespace DemonstrationLabTen
                 Console.WriteLine();
             }
         }
-        static List<string> GetNamesOfStudentsByCourse(int targetCourse)
+        // ПЕРВЫЙ ЗАПРОС
+        static void RequestNumberOne()
         {
-            List<string> result = new List<string>();
+            while (true)
+            {
+                Console.WriteLine("\nЗапрос #1 - Студенты заданного курса \nВведите порядковый номер курса (от 1 до 6):");
+                Console.Write("=> ");
+
+                if (!int.TryParse(Console.ReadLine(), out int targetCourse) || targetCourse < 1 || targetCourse > 6)
+                {
+                    Console.WriteLine("Некорректный ввод. Введите число от 1 до 6.");
+                }
+                else
+                {
+                    var studentsByCourse = GetStudentsByCourse(targetCourse);
+
+                    Console.WriteLine($"Студенты на курсе {targetCourse}:");
+                    foreach (var student in studentsByCourse)
+                    {
+                        Console.Write($"Тип: {student.GetType().Name}, ");
+                        student.Show();
+                        Console.WriteLine();
+                    }
+                    break; // Выходим из цикла, так как ввод корректен
+                }
+            }
+        }
+        static List<Person> GetStudentsByCourse(int targetCourse)
+        {
+            List<Person> studentsByCourse = new List<Person>();
 
             foreach (var person in persons)
             {
-                if (person is Student || person is PartTimeStudent) // Проверяем, что объект является Student или PartTimeStudent
+                if (person is Student student && student.Year == targetCourse)
                 {
-                    int year = GetCourseFromPerson(person);
-                    if (year == targetCourse)
-                    {
-                        string name = GetNameFromPerson(person);
-                        result.Add(name);
-                    }
+                    studentsByCourse.Add(person);
+                }
+                else if (person is PartTimeStudent partTimeStudent && partTimeStudent.Year == targetCourse)
+                {
+                    studentsByCourse.Add(person);
                 }
             }
-            return result;
-        }
-        static int GetCourseFromPerson(Person person)
-        {
-            // Используем динамическую идентификацию типа
-            if (person is Student student)
-            {
-                return student.Year;
-            }
-            else if (person is PartTimeStudent partTimeStudent)
-            {
-                return partTimeStudent.Year;
-            }
 
-            return 0; // Если не является ни Student, ни PartTimeStudent
+            return studentsByCourse;
         }
-
-        static string GetNameFromPerson(Person person)
+        // ВТОРОЙ ЗАПРОС
+        static void RequestNumberTwo()
         {
-            return person.Name;
-        }
-        static void RequestNumberOne() // ЗАПРОС 1
-        {
-            Console.WriteLine("\nЗапрос #1 - Имена студентов заданного курса \n Введите порядковый номер курса (от 1 до 6):");
-            Console.Write("=> ");
-            if (!int.TryParse(Console.ReadLine(), out int targetCourse) || targetCourse < 1 || targetCourse > 6)
+            while (true)
             {
-                Console.WriteLine("Некорректный ввод. Введите число от 1 до 6.");
-                return;
-            }
-            List<string> namesOfStudents = GetNamesOfStudentsByCourse(targetCourse);
-            Console.WriteLine($"Имена студентов заданного курса ({targetCourse}):");
-            foreach (var name in namesOfStudents)
-            {
-                Console.Write($"Форма обучения: {name.GetType().Name}, "); // ПОДУМАТЬ
-                Console.WriteLine(name);
-            }
-        }
-        static void RequestNumberTwo() // ЗАПРОС 2
-        {
-            Console.WriteLine("Введите возраст для поиска студентов старше:");
-            if (!int.TryParse(Console.ReadLine(), out int targetAge) || targetAge < 1 || targetAge > 99)
-            {
-                Console.WriteLine("Некорректный ввод. Введите число от 1 до 99.");
-                return;
-            }
+                Console.WriteLine("\nЗапрос #2 - Список людей младше заданного возраста \nВведите максимальный возраст:");
+                Console.Write("=> ");
 
-            static List<string> GetNamesOfStudentsOlderThanAge(int targetAge)
-            {
-                List<string> result = new List<string>();
-
-                foreach (var person in persons)
+                if (!int.TryParse(Console.ReadLine(), out int maxAge) || maxAge <= 0 || maxAge >= 100)
                 {
-                    if (person is Student || person is PartTimeStudent) // Проверяем, что объект является Student или PartTimeStudent
+                    Console.WriteLine("Некорректный ввод. Введите положительное число от 1 до 99.");
+                }
+                else
+                {
+                    var peopleYoungerThanMaxAge = GetPeopleYoungerThanMaxAge(maxAge);
+
+                    Console.WriteLine($"Люди младше {maxAge} лет:");
+                    foreach (var person in peopleYoungerThanMaxAge)
                     {
-                        int age = GetAgeFromPerson(person);
-                        if (age > targetAge)
+                        Console.Write($"Тип: {person.GetType().Name}, ");
+                        person.Show();
+                        Console.WriteLine();
+                    }
+                    break; // Выходим из цикла, так как ввод корректен
+                }
+            }
+        }
+        static List<Person> GetPeopleYoungerThanMaxAge(int maxAge)
+        {
+            List<Person> peopleYoungerThanMaxAge = new List<Person>();
+
+            foreach (var person in persons)
+            {
+                if (person.Age < maxAge)
+                {
+                    peopleYoungerThanMaxAge.Add(person);
+                }
+            }
+
+            return peopleYoungerThanMaxAge;
+        }
+        // ТРЕТИЙ ЗАПРОС
+        static void RequestNumberThree()
+        {
+            while (true)
+            {
+                Console.WriteLine("\nЗапрос #3 - Список людей с совпадающим именем\n В генераторе имён есть только: \"John\", \"Alice\", \"Bob\", \"Eva\", \"Charlie\", \"Olivia\", \"Daniel\", \"Sophia\" \nВведите имя:");
+                Console.Write("=> ");
+
+                string targetName = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(targetName))
+                {
+                    Console.WriteLine("Некорректный ввод. Имя не должно быть пустым.");
+                }
+                else
+                {
+                    var peopleWithMatchingName = GetPeopleWithMatchingName(targetName);
+
+                    if (peopleWithMatchingName.Count == 0)
+                    {
+                        Console.WriteLine($"Нет людей с именем {targetName}.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Люди с именем {targetName}:");
+                        foreach (var person in peopleWithMatchingName)
                         {
-                            string name = GetNameFromPerson(person);
-                            result.Add(name);
+                            Console.Write($"Тип: {person.GetType().Name}, ");
+                            person.Show();
+                            Console.WriteLine();
                         }
                     }
+
+                    break; // Выходим из цикла, так как ввод корректен
                 }
-                return result;
-            }
-
-            static int GetAgeFromPerson(Person person)
-            {
-                // Используем динамическую идентификацию типа
-                if (person is Student student)
-                {
-                    return student.Age;
-                }
-                else if (person is PartTimeStudent partTimeStudent)
-                {
-                    return partTimeStudent.Age;
-                }
-
-                return -1; // Если не является ни Student, ни PartTimeStudent
-            }
-
-            static string GetNameFromPerson(Person person)
-            {
-                return person.Name;
-            }
-
-            List<string> namesOfStudents = GetNamesOfStudentsOlderThanAge(targetAge);
-
-            // Выводим результат
-            Console.WriteLine($"Имена студентов старше {targetAge} лет:");
-            foreach (var name in namesOfStudents)
-            {
-                Console.WriteLine(name);
             }
         }
+        static List<Person> GetPeopleWithMatchingName(string targetName)
+        {
+            List<Person> peopleWithMatchingName = new List<Person>();
+
+            foreach (var person in persons)
+            {
+                if (person.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase))
+                {
+                    peopleWithMatchingName.Add(person);
+                }
+            }
+
+            return peopleWithMatchingName;
+        }
+
     }
 }

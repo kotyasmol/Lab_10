@@ -1,6 +1,6 @@
 ﻿namespace PersonLibrary
 {
-    public class Person 
+    public class Person : IInit, IComparable<Person>, IComparer<Person>
     {
         private static readonly string[] Names = { "John", "Alice", "Bob", "Eva", "Charlie", "Olivia", "Daniel", "Sophia" }; // нет необходимости перезаписывать поэтому readonly
         private string name; // не string? потому что не должен допускать NULL
@@ -39,6 +39,36 @@
         {
             Console.Write($"Имя: {Name}, Возраст: {Age}");
         }
+
+        public virtual string ShowFullInfo()
+        {
+            return this.ToString();
+        }
+
+        public virtual string ToString()
+        {
+            return $"Имя: {Name}, Возраст: {Age}";
+        }
+
+        public virtual int CompareTo(Person other)
+        {
+            int nameComparison = string.Compare(this.Name, other.Name, StringComparison.Ordinal);
+
+            if (nameComparison != 0)
+            {
+                return nameComparison;
+            }
+
+            // Если имена одинаковы, сравниваем полные строки представления объектов
+            return string.Compare(this.ToString(), other.ToString(), StringComparison.Ordinal);
+        }
+
+        public virtual int Compare(Person x, Person y)
+        {
+            return x.Age.CompareTo(y.Age);
+        }
+
+
         public virtual Person Init() // ввод объекта класса с консоли //невозможно протестировать на 100% потому что стек переполняется
         {
             int userAge;

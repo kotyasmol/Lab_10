@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class PartTimeStudent : Student
+    public class PartTimeStudent : Student, IInit, IComparable<Person>, IComparer<Person>
     {
         private static readonly string[] WorkPlaces = { "Yandex", "Mail.ru Group", "Kaspersky Lab", "Acronis", "JetBrains", "EPAM Systems", "ABBYY", "Luxoft" };
         private string work; // место работы - название компании
@@ -36,6 +36,37 @@ namespace PersonLibrary
         public void ShowInfo()
         {
             Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {Year}, Место работы: {work}");
+        }
+
+        public override string ShowFullInfo()
+        {
+            return this.ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Место работы: {Work}";
+        }
+        public override int CompareTo(Person other)
+        {
+            int baseComparison = base.CompareTo(other);
+            if (baseComparison != 0)
+            {
+                return baseComparison;
+            }
+
+            if (other is PartTimeStudent partTimeStudent)
+            {
+                // Сравниваем по Work, если other является PartTimeStudent
+                return this.Work.CompareTo(partTimeStudent.Work);
+            }
+
+            return 0;
+        }
+
+        public override int Compare(Person x, Person y)
+        {
+            return x.Age.CompareTo(y.Age);
         }
         public override Person Init() 
         {

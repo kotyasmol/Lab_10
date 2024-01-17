@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class Scholar : Person
+    public class Scholar : Person, IInit, IComparable<Person>, IComparer<Person>
     {
         private int grade; // год обучения
         public int Grade
@@ -28,7 +28,35 @@ namespace PersonLibrary
             this.grade = otherScholar.grade;
         }
 
+        public override string ShowFullInfo()
+        {
+            return this.ToString();
+        }
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Год обучения (класс): {Grade}";
+        }
 
+        public override int CompareTo(Person other)
+        {
+            int baseComparison = base.CompareTo(other);
+            if (baseComparison != 0)
+            {
+                return baseComparison;
+            }
+
+            if (other is Scholar scholar)
+            {
+                // Сравниваем по Grade, если other является Scholar
+                return this.Grade.CompareTo(scholar.Grade);
+            }
+
+            return 0;
+        }
+        public override int Compare(Person x, Person y)
+        {
+            return x.Age.CompareTo(y.Age);
+        }
         public override void Show()
         {
             base.Show(); // Вызываем базовый метод Show
