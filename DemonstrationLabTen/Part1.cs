@@ -1,9 +1,9 @@
 ﻿using PersonLibrary;
 using System.Security.Cryptography.X509Certificates;
 namespace DemonstrationLabTen;
-class Part1
+public class Part1
 {
-    static List<Person> persons = new List<Person>();
+    public static List<Person> persons = new List<Person>();
     public static void PrintMenu()
     {
         Console.WriteLine("1. Создание пустого объекта");
@@ -12,7 +12,7 @@ class Part1
         Console.WriteLine("4. Назад");
         Console.Write("=> ");
     }
-    static void Main()
+    public static void Main()
     {
         Console.WriteLine("ЧАСТЬ 1 - создание иерархии классов");
         while (true)
@@ -61,7 +61,7 @@ class Part1
         }
     }
 
-    static void WorkWithPerson() 
+    public static void WorkWithPerson() 
     {
         while (true)
         {
@@ -81,13 +81,13 @@ class Part1
                     break;
                 case 2:
                     Person randomPerson = new Person();
-                    randomPerson = randomPerson.RandomInit();
+                    randomPerson.RandomInit();
                     persons.Add(randomPerson);
                     break;
                 case 3:
-                    Person userPerson = new Person();
-                    userPerson = userPerson.Init();
-                    persons.Add(userPerson);
+                    Person newPerson = new Person();
+                    newPerson.Init();
+                    persons.Add(newPerson);
                     break;
                 case 4:
                     return;
@@ -95,7 +95,7 @@ class Part1
         }
     }
 
-    static void WorkWithStudent()
+    public static void WorkWithStudent()
     {
         while (true)
         {
@@ -116,12 +116,12 @@ class Part1
                     break;
                 case 2:
                     Student randomPerson = new Student();
-                    randomPerson = (Student)randomPerson.RandomInit();
+                    randomPerson.RandomInit();
                     persons.Add(randomPerson);
                     break;
                 case 3:
                     Student userPerson = new Student();
-                    userPerson = (Student)userPerson.Init();
+                    userPerson.Init();
                     persons.Add(userPerson);
                     break;
                 case 4:
@@ -130,7 +130,7 @@ class Part1
         }
     }
 
-    static void WorkWithPartTimeStudent()
+    public static void WorkWithPartTimeStudent()
     {
         while (true)
         {
@@ -151,12 +151,12 @@ class Part1
                     break;
                 case 2:
                     PartTimeStudent randomPerson = new PartTimeStudent();
-                    randomPerson = (PartTimeStudent)randomPerson.RandomInit();
+                    randomPerson.RandomInit();
                     persons.Add(randomPerson);
                     break;
                 case 3:
                     PartTimeStudent userPerson = new PartTimeStudent();
-                    userPerson = (PartTimeStudent)userPerson.Init();
+                    userPerson.Init();
                     persons.Add(userPerson);
                     break;
                 case 4:
@@ -165,7 +165,7 @@ class Part1
         }
     }
 
-    static void WorkWithScholar()
+    public static void WorkWithScholar()
     {
         while (true)
         {
@@ -186,13 +186,13 @@ class Part1
                     break;
                 case 2:
                     Scholar randomPerson = new Scholar();
-                    randomPerson = (Scholar)randomPerson.RandomInit();
+                    randomPerson.RandomInit();
                     persons.Add(randomPerson);
                     break;
                 case 3:
                     Scholar userPerson = new Scholar();
-                    randomPerson = (Scholar)userPerson.Init();
-                    persons.Add(randomPerson);
+                    userPerson.Init();
+                    persons.Add(userPerson);
                     break;
                 case 4:
                     return;
@@ -200,7 +200,7 @@ class Part1
         }
     }
 
-    static void DisplayObjects()
+    public static void DisplayObjects()
     {
         if (persons.Count == 0)
         {

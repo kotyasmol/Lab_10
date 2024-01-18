@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class Scholar : Person, IInit, IComparable<Person>, IComparer<Person>
+    public class Scholar : Person
     {
-        private int grade; // год обучения
+        private int grade; // год обучения ( первый раз в первый класс)
         public int Grade
         {
             get { return grade; }
             set { grade = value; }
         }
-
         public Scholar() : base() // без параметров
         {
             grade = 0;
@@ -23,115 +23,63 @@ namespace PersonLibrary
         {
             this.grade = grade;
         }
-        public Scholar(Scholar otherScholar) : base(otherScholar) // копирование
-        {
-            this.grade = otherScholar.grade;
-        }
-
-        public override string ShowFullInfo()
-        {
-            return this.ToString();
-        }
-        public override string ToString()
-        {
-            return $"{base.ToString()}, Год обучения (класс): {Grade}";
-        }
-
-        public override int CompareTo(Person other)
-        {
-            int baseComparison = base.CompareTo(other);
-            if (baseComparison != 0)
-            {
-                return baseComparison;
-            }
-
-            if (other is Scholar scholar)
-            {
-                // Сравниваем по Grade, если other является Scholar
-                return this.Grade.CompareTo(scholar.Grade);
-            }
-
-            return 0;
-        }
-        public override int Compare(Person x, Person y)
-        {
-            return x.Age.CompareTo(y.Age);
-        }
         public override void Show()
         {
             base.Show(); // Вызываем базовый метод Show
 
             // Добавляем дополнительную информацию для Scholar
-            Console.Write($", Год обучения (класс): {grade}");
+            Console.Write($"Год обучения (класс): {grade}");
         }
         public void ShowInfo()
         {
             Console.Write($"Имя: {Name}, Возраст: {Age}, Год обучения (класс): {grade}");
         }
-        public override Person Init()
+        public override void Init()
         {
-            Person basePerson = base.Init();
-            Scholar newScholar = new Scholar
-            {
-                Name = basePerson.Name,
-                Age = basePerson.Age
-            };
-
-            // Логика ввода года обучения
-            Console.WriteLine("Год обучения (класс): ");
-            int userGrade;
-            while (true)
-            {
-                if (!Int32.TryParse(Console.ReadLine(), out userGrade) || userGrade < 1 || userGrade > 11)
-                {
-                    Console.WriteLine("Некорректный ввод! 1 <= Год обучения <= 11");
-                    continue;
-                }
-                break;
-            }
-            newScholar.Grade = userGrade;
-            return newScholar;
+            base.Init();
+            int sGrade = CustomFunctions.InputInteger("Введите класс в котором обучается школьник: ");
+            CustomFunctions.CheckNumber(1, 11, ref sGrade);
+            Grade = sGrade;
         }
-        public override Person RandomInit()
+        public override void RandomInit()
         {
-            Random random = new Random();
-            // Вызываем базовый метод RandomInit из класса Person
-            Person basePerson = base.RandomInit();
-            // Создаем новый объект Scholar, используя базовый объект Person
-            Scholar newScholar = new Scholar
-            {
-                Name = basePerson.Name,
-                Age = random.Next(7, 18), // изменено потому что 80 летние обычно не ходят в школу, но если передумаешь то можно вернуть на место Age = basePeson.Age
-                Grade = random.Next(1, 12) // Пример логики для инициализации Grade для Scholar
-            };
-
-            return newScholar;
+            base.RandomInit();
+            Grade = random.Next(1, 12);
         }
 
-        public override bool Equals(Person otherPerson)
+        public override bool Equals(object obj)
         {
-            if (otherPerson == null)
+            if (obj == null || !this.GetType().Equals(obj.GetType()))
             {
                 return false;
             }
-            // Вызываем базовый Equals из класса Person
-            if (!base.Equals(otherPerson))
+            else
             {
-                return false;
+                Scholar scholar = (Scholar)obj;
+                return base.Equals(obj) && (Grade == scholar.Grade);
             }
-            // Сравниваем дополнительные свойства класса Scholar
-            if (otherPerson is Scholar otherScholar)
-            {
-                return grade == otherScholar.grade;
-            }
-
-            // Если объект не является Scholar, считаем их не равными
-            return false;
         }
 
-        public override int GetHashCode() // отладка
+        public Scholar ShallowCopy() //поверхностное копирование
         {
-            return HashCode.Combine(base.GetHashCode(), grade);
+            return (Scholar)this.MemberwiseClone();
         }
+        public object Clone()
+        {
+            // Вызываем Clone базового класса Person
+            Person baseClone = (Person)base.Clone();
+
+            // Создаем новый объект Scholar с клонированными значениями
+            Scholar clonedScholar = new Scholar
+            {
+                Name = baseClone.Name,
+                Age = baseClone.Age,
+                Grade = this.Grade // Добавляем клонированное поле Grade
+            };
+
+            return clonedScholar;
+        }
+
+        // НЕ ТРОГАТЬ ВСЁ ЧТО ВЫШЕ ( ЧАСТИ 1 И 2) 
     }
 }

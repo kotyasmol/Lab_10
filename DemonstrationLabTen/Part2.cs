@@ -13,23 +13,70 @@ namespace DemonstrationLabTen
         public static void RunPart2() // это мой новый мейн
         {
             Console.WriteLine("ЧАСТЬ 2 - динамическая идентификация типов");
-            Console.WriteLine("Введите количество объектов для создания:");
-            Console.Write("=> ");
-            while (true)
+
+            do
             {
-                if (!int.TryParse(Console.ReadLine(), out int n) || n <= 0)
+                Console.WriteLine("\nВыберите опцию:");
+                Console.WriteLine("1. Создать и отобразить объекты");
+                Console.WriteLine("2. Студенты заданного курса");
+                Console.WriteLine("3. Список людей младше заданного возраста");
+                Console.WriteLine("4. Список людей с совпадающим именем");
+                Console.WriteLine("5. Перейти к третьей части задания");
+                Console.WriteLine("0. Назад");
+
+                Console.Write("Ваш выбор: ");
+                if (!int.TryParse(Console.ReadLine(), out int choice))
                 {
-                    Console.WriteLine("Некорректный ввод. Пожалуйста, введите положительное целое число.");
-                    Console.Write("=> ");
+                    Console.WriteLine("Некорректный ввод. Введите число от 0 до 5.");
                     continue;
                 }
-                CreateAndDisplayObjects(n);
-                RequestNumberOne();
-                RequestNumberTwo();
-                RequestNumberThree();
-                Console.WriteLine("Все запросы выполнены, переход к третьей части задания...");
-                Part3.RunPart3();
-                return;
+
+                switch (choice)
+                {
+                    case 1:
+                        Console.WriteLine("\nВведите количество объектов для создания:");
+                        CreateAndDisplayObjects(GetValidNumberFromUser());
+                        DisplayObjects();
+                        break;
+
+                    case 2:
+                        RequestNumberOne();
+                        break;
+
+                    case 3:
+                        RequestNumberTwo();
+                        break;
+
+                    case 4:
+                        RequestNumberThree();
+                        break;
+
+                    case 5:
+                        Console.WriteLine("Переход к третьей части задания...");
+                        Part3.RunPart3();
+                        break;
+
+                    case 0:
+                        Console.WriteLine("Выход из программы.");
+                        return;
+
+                    default:
+                        Console.WriteLine("Некорректный выбор. Пожалуйста, выберите опцию от 0 до 5.");
+                        break;
+                }
+            } while (true);
+        }
+
+        static int GetValidNumberFromUser()
+        {
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out int number) && number >= 0)
+                {
+                    return number;
+                }
+
+                Console.WriteLine("Некорректный ввод. Пожалуйста, введите положительное целое число.");
             }
         }
         static void CreateAndDisplayObjects(int n)
@@ -38,28 +85,28 @@ namespace DemonstrationLabTen
             for (int i = 0; i < n; i++)
             {
                 Person newPerson = new Person();
-                newPerson = newPerson.RandomInit();
+                newPerson.RandomInit();
                 persons.Add(newPerson);
             }
             // Создаем и заполняем объекты Scholar
             for (int i = 0; i < n; i++)
             {
                 Scholar newScholar = new Scholar();
-                newScholar = (Scholar)newScholar.RandomInit();
+                newScholar.RandomInit();
                 persons.Add(newScholar);
             }
             // Создаем и заполняем объекты Student
             for (int i = 0; i < n; i++)
             {
                 Student newStudent = new Student();
-                newStudent = (Student)newStudent.RandomInit();
+                newStudent.RandomInit();
                 persons.Add(newStudent);
             }
             // Создаем и заполняем объекты PartTimeStudent
             for (int i = 0; i < n; i++)
             {
                 PartTimeStudent newPrtStudent = new PartTimeStudent();
-                newPrtStudent = (PartTimeStudent)newPrtStudent.RandomInit();
+                newPrtStudent.RandomInit();
                 persons.Add(newPrtStudent);
             }
             // Выводим созданные объекты

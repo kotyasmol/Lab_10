@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class NameComparer : IComparer<Person>
+    public class PersonNameComparer : IComparer<Person>
     {
         public int Compare(Person x, Person y)
         {
-            return x.Name.CompareTo(y.Name);
+            // Сравниваем по имени
+            return string.Compare(x.Name, y.Name, StringComparison.Ordinal);
         }
     }
 }

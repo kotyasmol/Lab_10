@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class PartTimeStudent : Student, IInit, IComparable<Person>, IComparer<Person>
+    public class PartTimeStudent : Student
     {
         private static readonly string[] WorkPlaces = { "Yandex", "Mail.ru Group", "Kaspersky Lab", "Acronis", "JetBrains", "EPAM Systems", "ABBYY", "Luxoft" };
         private string work; // место работы - название компании
-        public string Work 
-        { 
+        public string Work
+        {
             get { return work; }
-            set {  work = value; } 
+            set { work = value; }
         }
         public PartTimeStudent() : base() // без параметров
         {
@@ -23,11 +23,6 @@ namespace PersonLibrary
         {
             this.work = work;
         }
-        public PartTimeStudent(PartTimeStudent otherPrtStudent) : base(otherPrtStudent) // копирование
-        {
-            this.work = otherPrtStudent.work;
-        }
-
         public override void Show()
         {
             base.Show();
@@ -37,98 +32,54 @@ namespace PersonLibrary
         {
             Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {Year}, Место работы: {work}");
         }
-
-        public override string ShowFullInfo()
+        public override void Init()
         {
-            return this.ToString();
+            base.Init();
+            string swork = CustomFunctions.InputString("Введите Название компании (не должно быть пустым и содержать цифры)");
+            Work = swork;
+        }
+        public override void RandomInit()
+        {
+            base.RandomInit();
+            int randomIndex = random.Next(WorkPlaces.Length);
+            Work = WorkPlaces[randomIndex];
         }
 
-        public override string ToString()
+        public override bool Equals(object obj)
         {
-            return $"{base.ToString()}, Место работы: {Work}";
-        }
-        public override int CompareTo(Person other)
-        {
-            int baseComparison = base.CompareTo(other);
-            if (baseComparison != 0)
+            if (obj == null || !this.GetType().Equals(obj.GetType()))
             {
-                return baseComparison;
+                return false;
             }
-
-            if (other is PartTimeStudent partTimeStudent)
+            else
             {
-                // Сравниваем по Work, если other является PartTimeStudent
-                return this.Work.CompareTo(partTimeStudent.Work);
+                Student scholar = (Student)obj;
+                return base.Equals(obj) && (Year == scholar.Year);
             }
-
-            return 0;
         }
 
-        public override int Compare(Person x, Person y)
+        public PartTimeStudent ShallowCopy() //поверхностное копирование
         {
-            return x.Age.CompareTo(y.Age);
+            return (PartTimeStudent)this.MemberwiseClone();
         }
-        public override Person Init() 
+        public object Clone()
         {
-            Student basePerson = (Student)base.Init();
-            PartTimeStudent newPrtStudent = new PartTimeStudent
+            // Вызываем Clone базового класса Person
+            Student baseClone = (Student)base.Clone();
+
+            // Создаем новый объект Scholar с клонированными значениями
+            PartTimeStudent clonedScholar = new PartTimeStudent
             {
-                Name = basePerson.Name,
-                Age = basePerson.Age,
-                Year = basePerson.Year
+                Name = baseClone.Name,
+                Age = baseClone.Age,
+                Year = baseClone.Year,
+                Work = this.Work,
             };
 
-            Console.WriteLine("Место работы: ");
-            string userWork;
-            while (true) 
-            {
-                Console.WriteLine("Введите название компании:");
-                userWork = Console.ReadLine();
+            return clonedScholar;
+        }
+        // НЕ ТРОГАЙ
 
-                if (string.IsNullOrWhiteSpace(userWork) || string.IsNullOrEmpty(userWork) || userWork.Any(char.IsDigit))
-                {
-                    Console.WriteLine("Некорректный ввод! Строка не должна быть пустой и содержать цифры");
-                    continue;
-                }
-                break;
-            }
-            newPrtStudent.Work = userWork;
-            return newPrtStudent;
-        }
-        public override Person RandomInit()
-        {
-            Random random = new Random();
-            Student basePerson = (Student)base.RandomInit();
-            PartTimeStudent newPrtStudent = new PartTimeStudent
-            {
-                Name = basePerson.Name,
-                Age = basePerson.Age,
-                Year = basePerson.Year,
-                Work = WorkPlaces[random.Next(WorkPlaces.Length)]
-        };
-            return newPrtStudent;
-        }
 
-        public override bool Equals(Person otherPerson) // ПОДУМАТЬ, возможно тут что-то не так
-        {
-            if (otherPerson == null)
-            {
-                return false;
-            }
-            if (!base.Equals(otherPerson))
-            {
-                return false;
-            }
-            if (otherPerson is PartTimeStudent otherPrtStudent)
-            {
-                return work == otherPrtStudent.work;
-            }
-            return false;
-        }
-
-        public override int GetHashCode() 
-        {
-            return HashCode.Combine(base.GetHashCode(), work);
-        }
     }
 }

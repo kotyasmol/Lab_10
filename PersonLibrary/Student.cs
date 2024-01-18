@@ -7,125 +7,78 @@ using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class Student : Person, IInit, IComparable<Person>, IComparer<Person>
+    public class Student : Person
     {
         private int year; // год обучения
         public int Year
         {
             get { return year; }
             set { year = value; }
-        }
-
+        } // гетсет
         public Student() : base() // без параметров
         {
-            year = 0;
-        }
+            year = 1;
+        }  //без параметров
         public Student(string name, int age, int year) : base(name, age) // параметры
         {
             this.year = year;
-        }
-        public Student(Student otherStudent) : base(otherStudent) // копирование
-        {
-            this.year = otherStudent.year;
-        }
+        } //с параметрами
         public override void Show()
         {
             base.Show();
             Console.Write($", Курс: {year}");
-        }
+        } // виртуальный метод показа (использовать только его)
         public void ShowInfo()
         {
             Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {year}");
-        }
+        } // метод показа - особо не нужен 
 
-        public override string ShowFullInfo()
+        public override void Init()
         {
-            return this.ToString();
+            base.Init();
+            int sYear = CustomFunctions.InputInteger("Введите курс ( от 1  до 6): ");
+            CustomFunctions.CheckNumber(1,6, ref sYear);
+            Year = sYear;
         }
-
-        public override string ToString()
+        public override void RandomInit()
         {
-            return $"{base.ToString()}, Курс: {Year}";
+            base.RandomInit();
+            Year = random.Next(1, 7);
         }
-
-        public override int CompareTo(Person other)
+        public override bool Equals(object obj)
         {
-            int baseComparison = base.CompareTo(other);
-            if (baseComparison != 0)
-            {
-                return baseComparison;
-            }
-
-            if (other is Student student)
-            {
-                // Сравниваем по Year, если other является Student
-                return this.Year.CompareTo(student.Year);
-            }
-
-            return 0;
-        }
-        public override int Compare(Person x, Person y)
-        {
-            return x.Age.CompareTo(y.Age);
-        }
-
-        public override Person Init() // ВОЗМОЖНО есть смысл добавить специальность но это если тебе делать нехуй, в рандом тоже тогда ( с массивом специальностей)
-        {
-            Person basePerson = base.Init();
-            Student newStudent = new Student
-            {
-                Name = basePerson.Name,
-                Age = basePerson.Age
-            };
-
-            Console.WriteLine("Курс: ");
-            int userYear;
-            while (true)
-            {
-                Console.WriteLine("Введите год обучения (от 1 до 6):  ");
-                if (!Int32.TryParse(Console.ReadLine(), out userYear) || userYear < 1 || userYear > 6)
-                {
-                    Console.WriteLine("Некорректный ввод! 1 <= Год обучения <= 6");
-                    continue;
-                }
-                break;
-            }
-            newStudent.Year = userYear;
-            return newStudent;
-        }
-        public override Person RandomInit()
-        {
-            Random random = new Random();
-            Person basePerson = base.RandomInit();
-            Student newStudent = new Student
-            {
-                Name = basePerson.Name,
-                Age = random.Next(18, 98), 
-                Year = random.Next(1, 7) 
-            };
-            return newStudent;
-        }
-
-        public override bool Equals(Person otherPerson)
-        {
-            if (otherPerson == null)
+            if (obj == null || !this.GetType().Equals(obj.GetType()))
             {
                 return false;
             }
-            if (!base.Equals(otherPerson))
+            else
             {
-                return false;
+                Student scholar = (Student)obj;
+                return base.Equals(obj) && (Year == scholar.Year);
             }
-            if (otherPerson is Student otherStudent)
-            {
-                return year == otherStudent.year;
-            }
-            return false;
         }
 
-        public override int GetHashCode() // отладка
+        public Student ShallowCopy() //поверхностное копирование
         {
-            return HashCode.Combine(base.GetHashCode(), year);
+            return (Student)this.MemberwiseClone();
         }
+        public object Clone()
+        {
+            // Вызываем Clone базового класса Person
+            Person baseClone = (Person)base.Clone();
+
+            // Создаем новый объект Scholar с клонированными значениями
+            Student clonedScholar = new Student
+            {
+                Name = baseClone.Name,
+                Age = baseClone.Age,
+                Year = this.Year // Добавляем клонированное поле Grade
+            };
+
+            return clonedScholar;
+        }
+
+        // НЕ ТРОГАТЬ ВСЁ ЧТО ВЫШЕ ( ЧАСТИ 1 И 2) 
+
     }
 }
