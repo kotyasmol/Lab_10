@@ -13,6 +13,27 @@ namespace DemonstrationLabTen
         public static void RunPart3() // это мой новый мейн
         {
             Console.WriteLine("\nЧАСТЬ 3 - интерфейсы");
+            Person[] locations = new Person[25];
+            for (int i = 0; i < 10; ++i)
+            {
+                locations[i] = new Person();
+                locations[i].RandomInit();
+            }
+            for (int i = 10; i < 15; ++i)
+            {
+                locations[i] = new Student();
+                locations[i].RandomInit();
+            }
+            for (int i = 15; i < 20; ++i)
+            {
+                locations[i] = new Scholar();
+                locations[i].RandomInit();
+            }
+            for (int i = 20; i < 25; ++i)
+            {
+                locations[i] = new PartTimeStudent();
+                locations[i].RandomInit();
+            }
             IInit[] inits = new IInit[20];
             for (int i = 0; i < 10; ++i)
             {
@@ -21,12 +42,12 @@ namespace DemonstrationLabTen
             }
             for (int i = 10; i < 15; ++i)
             {
-                inits[i] = new Location();
+                inits[i] = new Person();
                 inits[i].RandomInit();
             }
             for (int i = 15; i < 20; ++i)
             {
-                inits[i] = new City();
+                inits[i] = new Student();
                 inits[i].RandomInit();
             }
             int choice1 = 0;
@@ -89,6 +110,22 @@ namespace DemonstrationLabTen
                         break;
                 }
             } while (choice1 > 0);
+        }
+        public static PartTimeStudent CopyShallow(PartTimeStudent copyAddress)
+        {
+            return copyAddress.ShallowCopy();
+        }
+        public static PartTimeStudent CopyDeep(PartTimeStudent copyAddress)
+        {
+            return (PartTimeStudent)copyAddress.Clone();
+        }
+        public static void ShowLocations(Person[] locations)
+        {
+            foreach (var item in locations)
+            {
+                item.Show();
+                Console.WriteLine();
+            }
         }
     }
  }

@@ -2,7 +2,7 @@
 
 namespace PersonLibrary
 {
-    public class Person 
+    public class Person : IInit, IComparable, ICloneable
     {
         private static readonly string[] Names = { "John", "Alice", "Bob", "Eva", "Charlie", "Olivia", "Daniel", "Sophia" }; // нет необходимости перезаписывать поэтому readonly
         private string name; // не string? потому что не должен допускать NULL
