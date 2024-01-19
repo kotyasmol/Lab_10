@@ -57,5 +57,6 @@ namespace PersonLibrary
             Console.WriteLine("\t\"Животное\"");
             Console.WriteLine($"Название: {Name}\nВес:{Weight}");
         }
+
     }
 }

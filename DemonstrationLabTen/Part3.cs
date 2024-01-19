@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static PersonLibrary.Student;
 
 namespace DemonstrationLabTen
 {
@@ -56,9 +57,9 @@ namespace DemonstrationLabTen
                 Console.Clear();
                 Console.Write(
                 "0. Вернуться к общему меню\n" +
-                "1. Отсортировать массив объектов по ВСТАВИТЬ ЧТО-ТО (используя IComparable)\n" +
-                "2. Отсортировать массив объектов ВСТАВИТЬ ЧТО-ТО (используя IComparer)\n" +
-                "3. Найти элемент ЧТО-ТО КАКОЙ-ТО \n" +
+                "1. Отсортировать массив объектов по ИМЕНИ (используя IComparable)\n" +
+                "2. Отсортировать массив объектов ВОЗРАСТУ (используя IComparer)\n" +
+                "3. Найти элемент с заданным именем \n" +
                 "4. Просмотр массива элементов типа IInit\n" +
                 "5. Демонстрация работы методов клонирования IClonable\n");
                 choice1 = CustomFunctions.InputInteger();
@@ -67,22 +68,22 @@ namespace DemonstrationLabTen
                 {
                     case 1:
                         Array.Sort(locations);
-                        Console.WriteLine("Сортировка по долготе:");
+                        Console.WriteLine("Сортировка по Имени:");
                         ShowLocations(locations);
                         CustomFunctions.Pause();
                         break;
                     case 2:
-                        Console.WriteLine("Сортировка по широте");
+                        Console.WriteLine("Сортировка по возрасту"); // почему
                         Array.Sort(locations, new SortByLatitude());
                         ShowLocations(locations);
                         CustomFunctions.Pause();
                         break;
                     case 3:
-                        double longitude = CustomFunctions.InputDouble("Введите долготу (значение от -180.0000 до 180.0000)");
-                        CustomFunctions.CheckNumber(-180, 180, ref longitude);
+                        string longitude = CustomFunctions.InputString("Введите искомое имя");
                         Array.Sort(locations);
-                        var res = SearchBinary(locations, longitude);
+                        var res = SearchBinaryByName(locations, longitude);
                         res.Show();
+                        Console.WriteLine(); // показывает только ПЕЕРВОЕ вхождение
                         CustomFunctions.Pause();
                         break;
                     case 4:
@@ -102,9 +103,11 @@ namespace DemonstrationLabTen
 
                         Console.WriteLine("Поверхностное копирование (ShallowCopy):");
                         shallowCopyItem.Show();
+                        Console.WriteLine();
 
                         Console.WriteLine("Глубокое копирование (Clone): ");
                         deepCopyItem.Show();
+                        Console.WriteLine();
 
                         CustomFunctions.Pause();
                         break;
@@ -126,6 +129,36 @@ namespace DemonstrationLabTen
                 item.Show();
                 Console.WriteLine();
             }
+        }
+        public static Person SearchBinaryByName(Person[] people, string targetName)
+        {
+            int left = 0;
+            int right = people.Length - 1;
+            int middle;
+
+            // Сортируем массив перед бинарным поиском
+            Array.Sort(people, new SortByName());
+
+            while (left <= right)
+            {
+                middle = (left + right) / 2;
+
+                if (string.Equals(people[middle].Name, targetName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return people[middle];
+                }
+                else if (string.Compare(people[middle].Name, targetName, StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    left = middle + 1;
+                }
+                else
+                {
+                    right = middle - 1;
+                }
+            }
+
+            // Если объект не найден, возвращаем null
+            return null;
         }
     }
  }

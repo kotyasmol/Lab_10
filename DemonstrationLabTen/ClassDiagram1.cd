@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PersonLibrary.Person">
+    <Position X="2.5" Y="1" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PersonLibrary.Scholar">
+    <Position X="4.75" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="PersonLibrary.Student">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <NestedTypes>
+      <Class Name="PersonLibrary.Student.SortByLatitude" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+      <Class Name="PersonLibrary.Student.SortByName" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="PersonLibrary.PartTimeStudent">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="PersonLibrary.Animal" Collapsed="true">
+    <Position X="9" Y="2" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="PersonLibrary.IInit" Collapsed="true">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

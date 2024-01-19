@@ -1,10 +1,11 @@
-﻿using System.Xml.Linq;
+﻿using System.IO;
+using System.Xml.Linq;
 
 namespace PersonLibrary
 {
     public class Person : IInit, IComparable, ICloneable
     {
-        private static readonly string[] Names = { "John", "Alice", "Bob", "Eva", "Charlie", "Olivia", "Daniel", "Sophia" }; // нет необходимости перезаписывать поэтому readonly
+        public static readonly string[] Names = { "John", "Alice", "Bob", "Eva", "Charlie", "Olivia", "Daniel", "Sophia" }; // нет необходимости перезаписывать поэтому readonly
         private string name; // не string? потому что не должен допускать NULL
         private int age;
         protected static Random random = new Random();
@@ -19,6 +20,7 @@ namespace PersonLibrary
             get { return age; }
             set { age = value; }
         }
+
         //конструкторы
         public Person() // конструктор по умолчанию
         {
@@ -86,5 +88,11 @@ namespace PersonLibrary
         }
 
         // НЕ ТРОГАТЬ ВСЁ ЧТО ВЫШЕ ( ЧАСТИ 1 И 2) 
+
+        public override string ToString()
+        {
+            return $"{Age}:{Name}";
+        }
     }
+
 }
