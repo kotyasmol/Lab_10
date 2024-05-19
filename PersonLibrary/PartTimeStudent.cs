@@ -8,78 +8,96 @@ namespace PersonLibrary
 {
     public class PartTimeStudent : Student
     {
-        private static readonly string[] WorkPlaces = { "Yandex", "Mail.ru Group", "Kaspersky Lab", "Acronis", "JetBrains", "EPAM Systems", "ABBYY", "Luxoft" };
-        private string work; // место работы - название компании
-        public string Work
+        protected string employer = "employer";
+
+        public string Employer
         {
-            get { return work; }
-            set { work = value; }
+            get { return employer; }
+            set
+            {
+                if (value == null || value == "")
+                {
+                    throw new ArgumentNullException("Ошибка: введённое значение не может являться названием компании!");
+                }
+                employer = value;
+            }
         }
-        public PartTimeStudent() : base() // без параметров
+        public Person BasePerson
         {
-            work = "unemployed";
+            get
+            {
+                return new Person(Name, Age);
+            }
         }
-        public PartTimeStudent(string name, int age, int year, string work) : base(name, age, year) // параметры
+
+        public PartTimeStudent() { }
+
+        public PartTimeStudent(string name, int age, string university, string employer) : base(name, age, university)
         {
-            this.work = work;
+            this.employer = employer;
         }
+
+        public PartTimeStudent(PartTimeStudent other) : this(other.Name, other.Age, other.University, other.Employer) { }
+
         public override void Show()
         {
             base.Show();
-            Console.Write($", Место работы: {work}");
+            Console.WriteLine($"Место работы: {employer}");
         }
-        public void ShowInfo()
-        {
-            Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {Year}, Место работы: {work}");
-        }
+
         public override void Init()
         {
             base.Init();
-            string swork = CustomFunctions.InputString("Введите Название компании (не должно быть пустым и содержать цифры)");
-            Work = swork;
+            Console.Write("Введите название места работы: ");
+            Employer = GetString();
         }
+
         public override void RandomInit()
         {
             base.RandomInit();
-            int randomIndex = random.Next(WorkPlaces.Length);
-            Work = WorkPlaces[randomIndex];
+            string[] employers = { "АО ОДК – Стар", "АО ЭР – Телеком Холдинг", "АО Новомет–Пермь", "Яндекс", "Ростелеком", "Google" };
+            Employer = employers[rnd.Next(employers.Length)];
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                Student scholar = (Student)obj;
-                return base.Equals(obj) && (Year == scholar.Year);
-            }
+            return obj is PartTimeStudent student &&
+                   base.Equals(obj) &&
+                   Name == student.Name &&
+                   Age == student.Age &&
+                   University == student.University &&
+                   Employer == student.Employer;
         }
-
-        public PartTimeStudent ShallowCopy() //поверхностное копирование
+        // Метод для поверхностного копирования
+        public PartTimeStudent ShallowCopy()
         {
             return (PartTimeStudent)this.MemberwiseClone();
         }
-        public object Clone()
+
+        // Метод для глубокого копирования
+        public PartTimeStudent Clone()
         {
-            // Вызываем Clone базового класса Person
-            Student baseClone = (Student)base.Clone();
+            // Создаем новый объект PartTimeStudent
+            PartTimeStudent cloned = new PartTimeStudent();
 
-            // Создаем новый объект Scholar с клонированными значениями
-            PartTimeStudent clonedScholar = new PartTimeStudent
-            {
-                Name = baseClone.Name,
-                Age = baseClone.Age,
-                Year = baseClone.Year,
-                Work = this.Work,
-            };
+            // Копируем значения полей
+            cloned.name = this.name;
+            cloned.age = this.age;
+            cloned.university = this.university;
+            cloned.employer = this.employer;
 
-            return clonedScholar;
+            return cloned;
         }
-        // НЕ ТРОГАЙ
-
-
+        public override int GetHashCode()
+        {
+            int hashCode = 157258573;
+            hashCode = hashCode * -1521134295 + base.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + Age.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(University);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Employer);
+            return hashCode;
+        }
     }
 }
+

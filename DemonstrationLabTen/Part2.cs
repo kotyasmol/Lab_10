@@ -91,7 +91,7 @@ namespace DemonstrationLabTen
             // Создаем и заполняем объекты Scholar
             for (int i = 0; i < n; i++)
             {
-                Scholar newScholar = new Scholar();
+                SchoolStudent newScholar = new SchoolStudent();
                 newScholar.RandomInit();
                 persons.Add(newScholar);
             }
@@ -162,11 +162,11 @@ namespace DemonstrationLabTen
 
             foreach (var person in persons)
             {
-                if (person is Student student && student.Year == targetCourse)
+                if (person is Student student && student.Age == targetCourse)
                 {
                     studentsByCourse.Add(person);
                 }
-                else if (person is PartTimeStudent partTimeStudent && partTimeStudent.Year == targetCourse)
+                else if (person is PartTimeStudent partTimeStudent && partTimeStudent.Age == targetCourse)
                 {
                     studentsByCourse.Add(person);
                 }

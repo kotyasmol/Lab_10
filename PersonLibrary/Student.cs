@@ -11,123 +11,20 @@ namespace PersonLibrary
 {
     public class Student : Person
     {
-        private int year; // год обучения
-        private string v;
+        protected string university = "university";
 
-        public int Year
+        public string University
         {
-            get { return year; }
-            set { year = value; }
-        } // гетсет
-        public Student() : base() // без параметров
-        {
-            year = 1;
-        }  //без параметров
-        public Student(string name, int age, int year) : base(name, age) // параметры
-        {
-            this.year = year;
-        } //с параметрами
-
-        public Student(string name, int age, string v, int year) : base(name, age)
-        {
-            this.v = v;
-            this.year = year;
-        }
-
-        public override void Show()
-        {
-            base.Show();
-            Console.Write($", Курс: {year}");
-        } // виртуальный метод показа (использовать только его)
-        public void ShowInfo()
-        {
-            Console.Write($"Имя: {Name}, Возраст: {Age}, Курс: {year}");
-        } // метод показа - особо не нужен 
-
-        public override void Init()
-        {
-            base.Init();
-            int sYear = CustomFunctions.InputInteger("Введите курс ( от 1  до 6): ");
-            CustomFunctions.CheckNumber(1, 6, ref sYear);
-            Year = sYear;
-        }
-        public override void RandomInit()
-        {
-            base.RandomInit();
-            Year = random.Next(1, 7);
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
+            get { return university; }
+            set
             {
-                return false;
-            }
-            else
-            {
-                Student scholar = (Student)obj;
-                return base.Equals(obj) && (Year == scholar.Year);
+                if (value == null || value == "")
+                {
+                    throw new ArgumentNullException("Ошибка: введённое значение не может являться названием университета!");
+                }
+                university = value;
             }
         }
-
-        public Student ShallowCopy() //поверхностное копирование
-        {
-            return (Student)this.MemberwiseClone();
-        }
-        public object Clone()
-        {
-            // Вызываем Clone базового класса Person
-            Person baseClone = (Person)base.Clone();
-
-            // Создаем новый объект Scholar с клонированными значениями
-            Student clonedScholar = new Student
-            {
-                Name = baseClone.Name,
-                Age = baseClone.Age,
-                Year = this.Year // Добавляем клонированное поле Grade
-            };
-
-            return clonedScholar;
-        }
-
-        // НЕ ТРОГАТЬ ВСЁ ЧТО ВЫШЕ ( ЧАСТИ 1 И 2) 
-        public class SortByLatitude : IComparer
-        {
-            int IComparer.Compare(object ob1, object ob2)
-            {
-                Person l1 = (Person)ob1;
-                Person l2 = (Person)ob2;
-                if (l1.Age > l2.Age)
-                    return 1;
-                if (l1.Age < l2.Age)
-                    return -1;
-                return 0;
-            }
-        }
-        public class SortByName : IComparer
-        {
-            public int Compare(object x, object y)
-            {
-                Person personX = (Person)x;
-                Person personY = (Person)y;
-
-                return string.Compare(personX.Name, personY.Name);
-            }
-        }
-
-        // НЕ ТРОГАТЬ
-
-        public override string ToString()
-        {
-            return $"{Age}:{Name}:{Year}";
-        }
-        public Person BaseLocation
-        {
-            get
-            {
-                return new Person(Name, Age);//возвращает объект базового класса
-            }
-        }
-        // Свойство, возвращающее ссылку на объект базового класса
         public Person BasePerson
         {
             get
@@ -136,10 +33,52 @@ namespace PersonLibrary
             }
         }
 
-        // Метод, возвращающий ссылку на объект базового класса
-        public Person GetBasePerson()
+        public Student() { }
+
+        public Student(string name, int age, string university) : base(name, age)
         {
-            return new Person(Name, Age);
+            University = university;
+        }
+
+        public Student(Student other) : this(other.Name, other.Age, other.University) { }
+
+        public override void Show()
+        {
+            base.Show();
+            Console.WriteLine($"Вуз: {University}");
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            Console.Write("Введите название вуза: ");
+            University = GetString();
+        }
+
+        public override void RandomInit()
+        {
+            base.RandomInit();
+            string[] universities = { "ПНИПУ", "ПГНИУ", "ВШЭ", "МГУ", "МФТИ", "СПбГУ" };
+            University = universities[rnd.Next(universities.Length)];
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Student student &&
+                   base.Equals(obj) &&
+                   Name == student.Name &&
+                   Age == student.Age &&
+                   University == student.University;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 19;
+            hashCode = hashCode * 23 + base.GetHashCode();
+            hashCode = hashCode * 23 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * 23 + Age.GetHashCode();
+            hashCode = hashCode * 23 + EqualityComparer<string>.Default.GetHashCode(University);
+            return hashCode;
         }
     }
 }

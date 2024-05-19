@@ -182,15 +182,15 @@ public class Part1
             switch (choice)
             {
                 case 1:
-                    persons.Add(new Scholar());
+                    persons.Add(new SchoolStudent());
                     break;
                 case 2:
-                    Scholar randomPerson = new Scholar();
+                    SchoolStudent randomPerson = new SchoolStudent();
                     randomPerson.RandomInit();
                     persons.Add(randomPerson);
                     break;
                 case 3:
-                    Scholar userPerson = new Scholar();
+                    SchoolStudent userPerson = new SchoolStudent();
                     userPerson.Init();
                     persons.Add(userPerson);
                     break;
@@ -214,14 +214,14 @@ public class Part1
         {
             Console.Write($"Тип: {person.GetType().Name}, ");
             person.Show();
-            Console.WriteLine(); // Добавляем пустую строку между объектами для читаемости
+            Console.WriteLine(); 
         }
-        Console.WriteLine("\nСозданные объекты (метод):");
+        Console.WriteLine("\nСозданные объекты (метод):"); // заменить, здеесь нет нонвиртуал метода
         foreach (var person in persons)
         {
             Console.Write($"Тип: {person.GetType().Name}, ");
-            person.ShowInfo();
-            Console.WriteLine(); // Добавляем пустую строку между объектами для читаемости
+            person.Show();
+            Console.WriteLine(); 
         }
     }
 }

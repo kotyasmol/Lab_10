@@ -3,96 +3,137 @@ using System.Xml.Linq;
 
 namespace PersonLibrary
 {
-    public class Person : IInit, IComparable, ICloneable
+    public class Person : IInit,  ICloneable, IComparable<Person>
     {
-        public static readonly string[] Names = { "John", "Alice", "Bob", "Eva", "Charlie", "Olivia", "Daniel", "Sophia" }; // нет необходимости перезаписывать поэтому readonly
-        private string name; // не string? потому что не должен допускать NULL
-        private int age;
-        protected static Random random = new Random();
-        //свойства
+        protected static Random rnd = new Random();
+        protected string name = "name";
+        protected int age;
+
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set
+            {
+                if (value == null || value == "")
+                {
+                    throw new ArgumentNullException("Ошибка: введённое значение не может являться именем!");
+                }
+                name = value;
+            }
         }
+
         public int Age
         {
             get { return age; }
-            set { age = value; }
+            set
+            {
+                if (age < 0)
+                {
+                    throw new ArgumentNullException("Ошибка: введённое значение не может являться возрастом!");
+                }
+                age = value;
+            }
         }
 
-        //конструкторы
-        public Person() // конструктор по умолчанию
-        {
-            Name = "Noname";
-            Age = age;
-        }
-        public Person(string name, int age) // конструктор с параметрами
+        public Person() { }
+
+        public Person(string name, int age)
         {
             Name = name;
             Age = age;
         }
-        //методы
-        virtual public void Show()
+
+        public Person(Person other) : this(other.Name, other.Age) { }
+
+        public virtual void Show()
         {
-            Console.Write($"Имя: {Name}  Возраст: {Age}  ");
+            Console.WriteLine($"Имя: {Name}");
+            Console.WriteLine($"Возраст: {Age}");
         }
-        public void ShowInfo()
-        {
-            Console.Write($"Имя: {Name}, Возраст: {Age}");
-        }
+
         public virtual void Init()
         {
-            string name = CustomFunctions.InputString("Введите имя (не должно быть пустым и содержать цифры)");
-            Name = name;
-            int age = CustomFunctions.InputInteger("Введите возраст ( от 1 до 99)");
-            CustomFunctions.CheckNumber(1, 99, ref age);
-            Age = age;
+            Console.Write("Введите имя: ");
+            Name = GetString();
+            Console.Write("Введите возраст: ");
+            Age = GetInt();
+        }
 
-        }
-        virtual public void RandomInit()
+        public virtual void RandomInit()
         {
-            int randomIndex = random.Next(Names.Length);
-            Name = Names[randomIndex];
-            Age = (int)random.Next(1, 100);
+            string[] names = { "John", "Alice", "Mary", "Vlad", "Andrew", "Sarah", "Boris", "July" };
+            Name = names[rnd.Next(names.Length)];
+            Age = rnd.Next(7, 70);
         }
+
+        public int GetInt()
+        {
+            int x;
+            string buf;
+            bool correct;
+            do
+            {
+                buf = Console.ReadLine();
+                correct = int.TryParse(buf, out x);
+                if (!correct)
+                    Console.Write("Ошибка! Введите ещё раз.\n  ");
+            }
+            while (!correct);
+            return x;
+        }
+        public override string ToString()
+        {
+            return $"Имя: {Name}, Возраст: {Age}";
+        }
+        public string GetString()
+        {
+            string x;
+            do
+            {
+                x = Console.ReadLine();
+                if (x == null || x == "")
+                    Console.Write("Ошибка: пустая строка. Введите ещё раз...\n  ");
+            }
+            while (x == null || x == "");
+            return x;
+        }
+
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                Person loc = (Person)obj;
-                return (Name == loc.Name) && (Age == loc.Age);
-            }
+            return obj is Person person &&
+                   Name == person.Name &&
+                   Age == person.Age;
         }
-        public int CompareTo(object obj)
-        {
-            if (obj == null) return 1;
 
-            Person otherPerson = obj as Person;
-            if (otherPerson != null)
-                return string.Compare(this.Name, otherPerson.Name, StringComparison.Ordinal);
-            else
-                throw new ArgumentException("Object is not a Person");
+        public override int GetHashCode()
+        {
+            int hashCode = -1360180430;
+            hashCode = hashCode * -1521134295 + Name.GetHashCode(); // EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + Age.GetHashCode();
+            return hashCode;
         }
-        public Person ShallowCopy() //поверхностное копирование
+
+        public virtual int CompareTo(Person other)
+        {
+            return string.Compare(Name, other.Name);
+        }
+        public Person ShallowCopy()
         {
             return (Person)this.MemberwiseClone();
         }
+
+        // Метод для глубокого копирования
         public object Clone()
         {
-            return new Person(Name, Age);
-        }
+            // Создаем новый объект PartTimeStudent
+            PartTimeStudent cloned = new PartTimeStudent();
 
-        // НЕ ТРОГАТЬ ВСЁ ЧТО ВЫШЕ ( ЧАСТИ 1 И 2) 
+            // Копируем значения полей
+            cloned.name = this.name;
+            cloned.age = this.age;
 
-        public override string ToString()
-        {
-            return $"{Age}:{Name}";
+
+            return cloned;
         }
     }
-
 }

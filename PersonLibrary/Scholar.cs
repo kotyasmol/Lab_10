@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -7,79 +8,102 @@ using System.Threading.Tasks;
 
 namespace PersonLibrary
 {
-    public class Scholar : Person
+    public class SchoolStudent : Person
     {
-        private int grade; // год обучения ( первый раз в первый класс)
+        protected string school = "school";
+        protected int grade = 1;
+
+        public string School
+        {
+            get { return school; }
+            set
+            {
+                if (value == null || value == "")
+                {
+                    throw new ArgumentException("Ошибка: введённое значение не может являться именем!");
+                }
+                school = value;
+            }
+        }
         public int Grade
         {
             get { return grade; }
-            set { grade = value; }
+            set
+            {
+                if (value < 1 || value > 5)
+                {
+                    throw new ArgumentException("Ошибка: значение должно быть в пределах от 1 до 5!");
+                }
+                grade = value;
+            }
         }
-        public Scholar() : base() // без параметров
+
+        public Person BasePerson
         {
-            grade = 0;
+            get
+            {
+                return new Person(Name, Age);
+            }
         }
-        public Scholar(string name, int age, int grade) : base(name, age) // параметры
+
+
+        public SchoolStudent() { }
+
+        public SchoolStudent(string name, int age, string school, int grade) : base(name, age)
         {
+            School = school;
             this.grade = grade;
+            Grade = grade;
         }
+
+        public SchoolStudent(SchoolStudent other) : this(other.Name, other.Age, other.School , other.grade) { }
+
         public override void Show()
         {
-            base.Show(); // Вызываем базовый метод Show
+            base.Show();
+            Console.WriteLine($"Школа: {school}");
+            Console.WriteLine($"Класс: {grade}");
+        }
 
-            // Добавляем дополнительную информацию для Scholar
-            Console.Write($"Год обучения (класс): {grade}");
-        }
-        public void ShowInfo()
+ 
+
+    public override void Init()
         {
-            Console.Write($"Имя: {Name}, Возраст: {Age}, Год обучения (класс): {grade}");
-        }
-        public override void Init()
-        {
-            base.Init();
-            int sGrade = CustomFunctions.InputInteger("Введите класс в котором обучается школьник: ");
-            CustomFunctions.CheckNumber(1, 11, ref sGrade);
-            Grade = sGrade;
-        }
+        base.Init();
+        Console.Write("Введите название школы: ");
+        School = Console.ReadLine();
+
+        Console.Write("Введите класс (от 1 до 5): ");
+        Grade = int.Parse(Console.ReadLine());
+    }
+
         public override void RandomInit()
         {
             base.RandomInit();
-            Grade = random.Next(1, 12);
+            string[] schools = { "Школа №1", "Школа №3", "Лицей №1", "Лицей №2", "Политехническая школа" };
+            School = schools[rnd.Next(schools.Length)];
+            Grade = rnd.Next(1, 6); // Случайное число от 1 до 5 включительно
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                Scholar scholar = (Scholar)obj;
-                return base.Equals(obj) && (Grade == scholar.Grade);
-            }
+            return obj is SchoolStudent student &&
+                               base.Equals(obj) &&
+                               Name == student.Name &&
+                               Age == student.Age &&
+                               School == student.School &&
+                               Grade == student.Grade;
         }
 
-        public Scholar ShallowCopy() //поверхностное копирование
+        public override int GetHashCode()
         {
-            return (Scholar)this.MemberwiseClone();
+            int hashCode = 17;
+            hashCode = hashCode * 23 + base.GetHashCode();
+            hashCode = hashCode * 23 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * 23 + Age.GetHashCode();
+            hashCode = hashCode * 23 + EqualityComparer<string>.Default.GetHashCode(School);
+            hashCode = hashCode * 23 + Grade.GetHashCode();
+            return hashCode;
         }
-        public object Clone()
-        {
-            // Вызываем Clone базового класса Person
-            Person baseClone = (Person)base.Clone();
-
-            // Создаем новый объект Scholar с клонированными значениями
-            Scholar clonedScholar = new Scholar
-            {
-                Name = baseClone.Name,
-                Age = baseClone.Age,
-                Grade = this.Grade // Добавляем клонированное поле Grade
-            };
-
-            return clonedScholar;
-        }
-
-        // НЕ ТРОГАТЬ ВСЁ ЧТО ВЫШЕ ( ЧАСТИ 1 И 2) 
     }
 }

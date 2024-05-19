@@ -27,7 +27,7 @@ namespace DemonstrationLabTen
             }
             for (int i = 15; i < 20; ++i)
             {
-                locations[i] = new Scholar();
+                locations[i] = new SchoolStudent();
                 locations[i].RandomInit();
             }
             for (int i = 20; i < 25; ++i)
@@ -38,7 +38,7 @@ namespace DemonstrationLabTen
             IInit[] inits = new IInit[20];
             for (int i = 0; i < 10; ++i)
             {
-                inits[i] = new Animal();
+                inits[i] = new Plant();
                 inits[i].RandomInit();
             }
             for (int i = 10; i < 15; ++i)
@@ -68,13 +68,14 @@ namespace DemonstrationLabTen
                 {
                     case 1:
                         Array.Sort(locations);
-                        Console.WriteLine("Сортировка по Имени:");
+                        Console.WriteLine("Сортировка по имени:");
+                        Array.Sort(locations, new PersonNameComparer());
                         ShowLocations(locations);
                         CustomFunctions.Pause();
                         break;
                     case 2:
-                        Console.WriteLine("Сортировка по возрасту"); // почему
-                        Array.Sort(locations, new SortByLatitude());
+                        Console.WriteLine("Сортировка по возрасту"); 
+                        Array.Sort(locations, new PersonAge());
                         ShowLocations(locations);
                         CustomFunctions.Pause();
                         break;
@@ -95,19 +96,21 @@ namespace DemonstrationLabTen
                         }
                         CustomFunctions.Pause();
                         break;
-                    case 5:
+                    case 5: //здесь тоже
                         PartTimeStudent newItem = new PartTimeStudent();
                         newItem.RandomInit();
-                        PartTimeStudent shallowCopyItem = CopyShallow(newItem);
-                        PartTimeStudent deepCopyItem = CopyDeep(newItem);
+
+                        // Поверхностное копирование
+                        PartTimeStudent shallowCopyItem = newItem.ShallowCopy();
+
+                        // Глубокое копирование
+                        PartTimeStudent deepCopyItem = newItem.Clone();
 
                         Console.WriteLine("Поверхностное копирование (ShallowCopy):");
                         shallowCopyItem.Show();
-                        Console.WriteLine();
 
                         Console.WriteLine("Глубокое копирование (Clone): ");
                         deepCopyItem.Show();
-                        Console.WriteLine();
 
                         CustomFunctions.Pause();
                         break;
@@ -116,7 +119,11 @@ namespace DemonstrationLabTen
         }
         public static PartTimeStudent CopyShallow(PartTimeStudent copyAddress)
         {
-            return copyAddress.ShallowCopy();
+            PartTimeStudent shallowCopy = new PartTimeStudent();
+            shallowCopy.Name = copyAddress.Name; // Копирование полей одного объекта в другой
+            shallowCopy.Age = copyAddress.Age;
+            // продолжайте копировать остальные поля по аналогии
+            return shallowCopy;
         }
         public static PartTimeStudent CopyDeep(PartTimeStudent copyAddress)
         {
@@ -137,7 +144,7 @@ namespace DemonstrationLabTen
             int middle;
 
             // Сортируем массив перед бинарным поиском
-            Array.Sort(people, new SortByName());
+            Array.Sort(people, new PersonNameComparer());
 
             while (left <= right)
             {
